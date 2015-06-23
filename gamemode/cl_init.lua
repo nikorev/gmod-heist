@@ -1,1 +1,3 @@
 // CLIENTSIDE
+
+include("shared.lua")
