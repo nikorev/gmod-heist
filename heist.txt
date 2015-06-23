@@ -1,0 +1,15 @@
+"heist"
+{
+	"base"		"base"
+    "title"  	"GMOD Heist"
+	"maps"		""
+	"menusystem" "1"
+    "version"   "Ver-0.1_6/24/2015"
+
+    "author_name"   "Nikorev and Helix Original"
+    "author_email"  ""
+
+    "icon"  ""
+    "info"  ""
+    "hide"  "0"
+}
