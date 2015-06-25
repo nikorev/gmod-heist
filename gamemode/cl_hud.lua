@@ -1,3 +1,4 @@
+AddCSLuaFile("cl_hud.lua")
 
 function heisthud()
 	if LocalPlayer():Alive() then
