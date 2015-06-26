@@ -15,10 +15,33 @@ local function heisthud()
 	-- MONEY
 		draw.DrawText("$5000", "Default", 200, 85, Color(197, 225, 165, 255), TEXT_ALIGN_CENTER)
 		
+	-- PLAYER COUNT	
+		draw.DrawText(#player.GetAll().."\n PLAYERS", "TargetID", ScrW() / 2, ScrH() - 75, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+		
+		
+		
+	-- CROSSHAIR
+		draw.RoundedBox(0, ScrW() / 2 - 1, ScrH() / 2 + 5, 2, 10, Color(255, 255, 255, 255))
+		draw.RoundedBox(0, ScrW() / 2 - 1, ScrH() / 2 - 16, 2, 10, Color(255, 255, 255, 255))
+		
+		surface.DrawCircle( ScrW() / 2, ScrH() / 2, 10, Color(255, 255, 255, 255) )
+		
+		draw.RoundedBox(0, ScrW() / 2 + 5, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
+		draw.RoundedBox(0, ScrW() / 2 - 16, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
 		
 	end
 end
 hook.Add("HUDPaint", "heisthud", heisthud)
+
+
+local function HideThings( name )
+	if(name == "CHudHealth") or (name == "CHudBattery") or (name == "CHudCrosshair") then
+             return false
+        end
+
+end
+hook.Add( "HUDShouldDraw", "HideThings", HideThings )
+
 
 local function teamlistderma()
 
@@ -76,6 +99,8 @@ playerpanel:SetPos( 0, 0 )
 playerpanel:SetSize( 300, 0 )
 playerpanel:SetVisible(true)
 
+blackpanel:AddItem(playerpanel)
+
 playerpanel.Paint = function()
 	--draw.RoundedBox(0, 0, 0, 300, playerpanel:GetTall(), Color(255, 0, 0, 200))
 	draw.RoundedBox(0, 50, playerpanel:GetTall() / 2, 200, 2, Color(255, 255, 255, 25*(1+math.sin(CurTime()*5)*5.2)))
@@ -97,6 +122,8 @@ local playerpanel2 = vgui.Create( "DPanel", basepanel )
 playerpanel2:SetPos( 0, 50 )
 playerpanel2:SetSize( 300, 0 )
 playerpanel2:SetVisible(true)
+
+blackpanel:AddItem(playerpanel2)
 
 playerpanel2.Paint = function()
 	--draw.RoundedBox(0, 0, 0, 300, playerpanel2:GetTall(), Color(255, 0, 0, 200))
@@ -124,9 +151,12 @@ playerpanel3:SetPos( 0, 100 )
 playerpanel3:SetSize( 300, 45 )
 playerpanel3:SetVisible(true)
 
+blackpanel:AddItem(playerpanel3)
+
+
 playerpanel3.Paint = function()
 	draw.DrawText(LocalPlayer():Nick(), "Default", 60, playerpanel3:GetTall() / 2 - 15, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
-	draw.RoundedBox(0, 60, playerpanel3:GetTall() / 2, math.Clamp(LocalPlayer():Health()*2, 0, 200), 5, Color(255, 0, 0, 255))
+	draw.RoundedBox(0, 60, playerpanel3:GetTall() / 2, math.Clamp(LocalPlayer():Health()*2, 0, 200), 5, Color(255, 0, 0, 255))	
 	draw.RoundedBox(0, 60, playerpanel3:GetTall() / 2 + 10, math.Clamp(LocalPlayer():Armor()*2, 0, 200), 5, Color(0, 0, 255, 255))
 end
 
