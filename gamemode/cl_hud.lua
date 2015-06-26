@@ -24,7 +24,7 @@ local function heisthud()
 		draw.RoundedBox(0, ScrW() / 2 - 1, ScrH() / 2 + 5, 2, 10, Color(255, 255, 255, 255))
 		draw.RoundedBox(0, ScrW() / 2 - 1, ScrH() / 2 - 16, 2, 10, Color(255, 255, 255, 255))
 		
-		surface.DrawCircle( ScrW() / 2, ScrH() / 2, 10, Color(255, 255, 255, 255) )
+		--surface.DrawCircle( ScrW() / 2, ScrH() / 2, 25, Color(255, 255, 255, 255) )
 		
 		draw.RoundedBox(0, ScrW() / 2 + 5, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
 		draw.RoundedBox(0, ScrW() / 2 - 16, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
