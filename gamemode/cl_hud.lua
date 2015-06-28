@@ -29,6 +29,16 @@ local function heisthud()
 		draw.RoundedBox(0, ScrW() / 2 + 5, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
 		draw.RoundedBox(0, ScrW() / 2 - 16, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
 		
+		
+		
+	-- BUILD/VERSION
+		draw.RoundedBox(0, ScrW() - 150, 25, 125, 30, Color(255, 0, 0, 25)) // DEV
+		--draw.RoundedBox(0, ScrW() - 150, 25, 125, 30, Color(0, 0, 255, 25)) // BETA
+		--draw.RoundedBox(0, ScrW() - 150, 25, 125, 30, Color(0, 255, 0, 25)) // RELEASE		
+		
+		draw.DrawText("Build 0.1", "Default", ScrW() - 90, 30, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+		draw.DrawText("6/28/15", "Default", ScrW() - 90, 40, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+		
 	end
 end
 hook.Add("HUDPaint", "heisthud", heisthud)
