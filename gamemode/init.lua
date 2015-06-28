@@ -17,7 +17,7 @@ util.AddNetworkString( "openhudplayerlist" )
 
 
 function openhudderma(ply)
-timer.Simple(.1, function()
+timer.Simple(1, function()
 	net.Start( "openhudplayerlist" )
 	net.Send( ply )
 end)

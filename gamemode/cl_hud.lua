@@ -170,3 +170,90 @@ Avatar:SetPlayer( LocalPlayer(), 32 )
 end
 net.Receive("openhudplayerlist", teamlistderma)
 //concommand.Add("opendis", teamlistderma)
+
+
+
+
+-- 3D2D Doors
+function cam_door_test()
+
+local locked = true
+
+
+local locked = Material("materials/padlock-lock-icon.png")
+local unlocked = Material("materials/padlock-unlock-icon.png")
+
+
+	for k,v in pairs(ents.GetAll()) do
+		if v:GetClass() == "prop_door" or v:GetClass() == "prop_door_rotating" then
+			local angles = v:GetAngles()
+			local position = v:GetPos()
+			local offset = angles:Up() + angles:Forward() * -1.2 + angles:Right() * - 31
+			local offset2 = angles:Up() + angles:Forward() * 1.2 + angles:Right() * - 15.5
+
+
+			angles:RotateAroundAxis(angles:Forward(), 90)
+			angles:RotateAroundAxis(angles:Right(), 90)
+			angles:RotateAroundAxis(angles:Up(), 0)
+			
+			local dist = (LocalPlayer():GetShootPos() - v:GetPos()):Length()
+			
+			if ((dist < 250) and LocalPlayer():GetEyeTrace().Entity == v) then
+
+			cam.Start3D2D(position + offset, angles, 0.1)
+			
+			if locked == true then
+				
+				// LOCKED
+			
+				draw.SimpleText("LOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
+				
+				surface.SetMaterial( locked )
+				surface.SetDrawColor( 255, 255, 255, 255 )
+				surface.DrawTexturedRect(24.6, -60,128,128)
+				
+			else	
+				
+			-- UNLOCKED
+				draw.SimpleText("UNLOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
+				
+				surface.SetMaterial( unlocked )
+				surface.SetDrawColor( 255, 255, 255, 255 )
+				surface.DrawTexturedRect(24.6, -60,128,128)
+			
+			end
+			cam.End3D2D()
+			
+			angles:RotateAroundAxis(angles:Forward(), 0)
+			angles:RotateAroundAxis(angles:Right(), 180)
+			angles:RotateAroundAxis(angles:Up(), 0)
+			
+			cam.Start3D2D(position + offset2, angles, 0.1)
+				
+			if locked == true then
+				
+				// LOCKED
+			
+				draw.SimpleText("LOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
+				
+				surface.SetMaterial( locked )
+				surface.SetDrawColor( 255, 255, 255, 255 )
+				surface.DrawTexturedRect(24.6, -60,128,128)
+				
+			else	
+				
+			-- UNLOCKED
+				draw.SimpleText("UNLOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
+				
+				surface.SetMaterial( unlocked )
+				surface.SetDrawColor( 255, 255, 255, 255 )
+				surface.DrawTexturedRect(24.6, -60,128,128)
+			
+			end
+			cam.End3D2D()
+			
+			end
+		end
+	end
+end
+hook.Add("PostDrawOpaqueRenderables", "cam_door_test", cam_door_test)
