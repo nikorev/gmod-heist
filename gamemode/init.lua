@@ -5,6 +5,7 @@ include("sh_teams.lua")
 include("sh_marking.lua")
 
 include("sv_marking.lua")
+include("sv_fastdl.lua")
 
 AddCSLuaFile("cl_hud.lua")
 AddCSLuaFile("cl_marking.lua")

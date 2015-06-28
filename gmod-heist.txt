@@ -9,7 +9,7 @@
     "author_name"   "Nikorev and Helix Original"
     "author_email"  ""
 
-    "icon"  ""
+    "icon"  "icon24.png"
     "info"  ""
     "hide"  "0"
 }
