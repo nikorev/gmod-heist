@@ -6,9 +6,11 @@ include("sh_marking.lua")
 
 include("sv_marking.lua")
 include("sv_fastdl.lua")
+include("sv_plysaving.lua")
 
 AddCSLuaFile("cl_hud.lua")
 AddCSLuaFile("cl_marking.lua")
+AddCSLuaFile("cl_plysaving.lua")
 
 
 //ebell@comsewogue.k12.ny.us

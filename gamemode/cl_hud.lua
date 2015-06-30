@@ -13,7 +13,7 @@ local function heisthud()
 		draw.DrawText(LocalPlayer():Armor(), "DermaLarge", 300, 65, Color(121, 134, 203, 255), TEXT_ALIGN_CENTER)
 		
 	-- MONEY
-		draw.DrawText("$5000", "Default", 200, 85, Color(197, 225, 165, 255), TEXT_ALIGN_CENTER)
+		draw.DrawText("$"..Inventory["Money"], "Default", 200, 85, Color(197, 225, 165, 255), TEXT_ALIGN_CENTER)
 		
 	-- PLAYER COUNT	
 		draw.DrawText(#player.GetAll().."\n PLAYERS", "TargetID", ScrW() / 2, ScrH() - 75, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
@@ -53,6 +53,71 @@ end
 hook.Add( "HUDShouldDraw", "HideThings", HideThings )
 
 
+local meta = FindMetaTable("Panel")
+
+function meta:SetCardPlayer(ply)
+	self.CardPlayer = ply
+end
+
+function meta:GetCardPlayer()
+	return self.CardPlayer
+end
+
+local PlayerCard = {}
+function PlayerCard:Init()
+	self.loading = true
+	
+	
+	self:SetSize(300, 45)
+	self:SetPos(0, 100)
+	
+	timer.Simple(5, function()
+		self.loading = false
+
+		self.Avatar = vgui.Create("AvatarImage", self)
+		self.Avatar:SetPlayer( self:GetCardPlayer(), 32 )
+		self.Avatar:SetSize( 32, 32 )
+		self.Avatar:SetPos( 10, self:GetTall() / 2 - 16 )
+	
+	end)
+end
+
+function PlayerCard:Think()
+	if ( !IsValid( self:GetCardPlayer() ) ) then
+		self:SetZPos( 9999 )
+		self:Remove()
+		return
+	end
+end
+
+function PlayerCard:Paint()
+	-- LOADING
+	
+	if self.loading then
+	draw.RoundedBox(0, 50, self:GetTall() / 2, 200, 2, Color(255, 255, 255, 25*(1+math.sin(CurTime()*5)*5.2)))
+	draw.DrawText("LOADING", "Default", 50, self:GetTall() / 2 - 10, Color(255, 255, 255, 25*(1+math.sin(CurTime()*5)*5.2)))
+	return
+	end
+	
+	-- PLAYER CARD
+	draw.DrawText(self:GetCardPlayer():Nick(), "Default", 60, self:GetTall() / 2 - 15, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+	
+	if !self:GetCardPlayer():Alive() then
+		draw.DrawText("DEAD", "HudHintTextLarge", self:GetWide() / 2, self:GetTall() / 2 - 5, Color(255, 0, 0, 255), TEXT_ALIGN_CENTER)
+	else
+	draw.RoundedBox(0, 60, self:GetTall() / 2, math.Clamp(self:GetCardPlayer():Health()*2, 0, 200), 5, Color(255, 0, 0, 255))	
+	draw.RoundedBox(0, 60, self:GetTall() / 2 + 10, math.Clamp(self:GetCardPlayer():Armor()*2, 0, 200), 5, Color(0, 0, 255, 255))
+	end
+end
+
+PlayerCard = vgui.RegisterTable(PlayerCard, "EditablePanel")
+
+local pow = math.pow
+local function inQuad()
+ local t = .001 / 250
+  return CurTime() * pow(t, 2) + CurTime()
+end
+
 local function teamlistderma()
 
 local NextThink = CurTime() + .1
@@ -81,189 +146,29 @@ end
 
 
 -- SLIDE IN FRAME
-local blackpanel = vgui.Create( "DScrollPanel", basepanel )
+local blackpanel = vgui.Create( "DPanelList", basepanel )
 blackpanel:SetPos( 0, 0 )
-blackpanel:SetSize( 300, 0 )
+blackpanel:SetSize( 300, 250 )
+blackpanel:SetSpacing(10)
+blackpanel:SetPadding(5)
 blackpanel:SetVisible(true)
+blackpanel:EnableVerticalScrollbar( true )
 
+function blackpanel:Think()
+	for k,v in pairs(player.GetAll()) do
+		if ( IsValid( v.CardEntry ) ) then continue end
+		v.CardEntry = vgui.CreateFromTable( PlayerCard, v.CardEntry )
+		v.CardEntry:SetCardPlayer(v)
+		
+		blackpanel:AddItem( v.CardEntry )
+	end
+end
 blackpanel.Paint = function()
-	draw.RoundedBox(0, 0, 0, 300, blackpanel:GetTall(), Color(0, 0, 0, 200))
+	draw.RoundedBox(0, 0, 0, 300, inQuad(), Color(0, 0, 0, 200))
 end
-
-
-blackpanel.Think = function()
-	if CurTime() >= NextThink then
-		if blackpanel:GetTall() != 250 then
-			blackpanel:SetSize(300, blackpanel:GetTall() + 1)
-			NextThink = CurTime() + .001
-		else
-			NextThink = 0
-		end
-	end
-end
-	
-
--- PLAYERS ON THE MENU
-local playerpanel = vgui.Create( "DPanel", basepanel )
-playerpanel:SetPos( 0, 0 )
-playerpanel:SetSize( 300, 0 )
-playerpanel:SetVisible(true)
-
-blackpanel:AddItem(playerpanel)
-
-playerpanel.Paint = function()
-	--draw.RoundedBox(0, 0, 0, 300, playerpanel:GetTall(), Color(255, 0, 0, 200))
-	draw.RoundedBox(0, 50, playerpanel:GetTall() / 2, 200, 2, Color(255, 255, 255, 25*(1+math.sin(CurTime()*5)*5.2)))
-	draw.DrawText("LOADING", "Default", 50, playerpanel:GetTall() / 2 - 10, Color(255, 255, 255, 25*(1+math.sin(CurTime()*5)*5.2)))
-end
-
-playerpanel.Think = function()
-	if CurTime() >= NextThink2 then
-		if playerpanel:GetTall() != 45 then
-			playerpanel:SetSize(300, playerpanel:GetTall() + 1)
-			NextThink2 = CurTime() + .01
-		else
-			NextThink2 = 0
-		end
-	end
-end
-
-local playerpanel2 = vgui.Create( "DPanel", basepanel )
-playerpanel2:SetPos( 0, 50 )
-playerpanel2:SetSize( 300, 0 )
-playerpanel2:SetVisible(true)
-
-blackpanel:AddItem(playerpanel2)
-
-playerpanel2.Paint = function()
-	--draw.RoundedBox(0, 0, 0, 300, playerpanel2:GetTall(), Color(255, 0, 0, 200))
-	draw.RoundedBox(0, 50, playerpanel2:GetTall() / 2, 200, 2, Color(255, 255, 255, 25*(1+math.sin(CurTime()*5)*5.2)))
-	draw.DrawText("LOADING", "Default", 50, playerpanel2:GetTall() / 2 - 10, Color(255, 255, 255, 25*(1+math.sin(CurTime()*5)*5.2)))
-end
-
-playerpanel2.Think = function()
-	if CurTime() >= NextThink2 then
-		if playerpanel2:GetTall() != 45 then
-			playerpanel2:SetSize(300, playerpanel2:GetTall() + 1)
-			NextThink2 = CurTime() + .01
-		else
-			NextThink2 = 0
-		end
-	end
-end
-
-
-
-
-
-local playerpanel3 = vgui.Create( "DPanel", basepanel )
-playerpanel3:SetPos( 0, 100 )
-playerpanel3:SetSize( 300, 45 )
-playerpanel3:SetVisible(true)
-
-blackpanel:AddItem(playerpanel3)
-
-
-playerpanel3.Paint = function()
-	draw.DrawText(LocalPlayer():Nick(), "Default", 60, playerpanel3:GetTall() / 2 - 15, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
-	draw.RoundedBox(0, 60, playerpanel3:GetTall() / 2, math.Clamp(LocalPlayer():Health()*2, 0, 200), 5, Color(255, 0, 0, 255))	
-	draw.RoundedBox(0, 60, playerpanel3:GetTall() / 2 + 10, math.Clamp(LocalPlayer():Armor()*2, 0, 200), 5, Color(0, 0, 255, 255))
-end
-
-
-local Avatar = vgui.Create( "AvatarImage", playerpanel3 )
-Avatar:SetSize( 32, 32 )
-Avatar:SetPos( 10, playerpanel3:GetTall() / 2 - 16 )
-Avatar:SetPlayer( LocalPlayer(), 32 )
-
-
 end
 net.Receive("openhudplayerlist", teamlistderma)
 //concommand.Add("opendis", teamlistderma)
 
 
 
-
--- 3D2D Doors
-function cam_door_test()
-
-local locked = true
-
-
-local locked = Material("materials/padlock-lock-icon.png")
-local unlocked = Material("materials/padlock-unlock-icon.png")
-
-
-	for k,v in pairs(ents.GetAll()) do
-		if v:GetClass() == "prop_door" or v:GetClass() == "prop_door_rotating" then
-			local angles = v:GetAngles()
-			local position = v:GetPos()
-			local offset = angles:Up() + angles:Forward() * -1.2 + angles:Right() * - 31
-			local offset2 = angles:Up() + angles:Forward() * 1.2 + angles:Right() * - 15.5
-
-
-			angles:RotateAroundAxis(angles:Forward(), 90)
-			angles:RotateAroundAxis(angles:Right(), 90)
-			angles:RotateAroundAxis(angles:Up(), 0)
-			
-			local dist = (LocalPlayer():GetShootPos() - v:GetPos()):Length()
-			
-			if ((dist < 250) and LocalPlayer():GetEyeTrace().Entity == v) then
-
-			cam.Start3D2D(position + offset, angles, 0.1)
-			
-			if locked == true then
-				
-				// LOCKED
-			
-				draw.SimpleText("LOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
-				
-				surface.SetMaterial( locked )
-				surface.SetDrawColor( 255, 255, 255, 255 )
-				surface.DrawTexturedRect(24.6, -60,128,128)
-				
-			else	
-				
-			-- UNLOCKED
-				draw.SimpleText("UNLOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
-				
-				surface.SetMaterial( unlocked )
-				surface.SetDrawColor( 255, 255, 255, 255 )
-				surface.DrawTexturedRect(24.6, -60,128,128)
-			
-			end
-			cam.End3D2D()
-			
-			angles:RotateAroundAxis(angles:Forward(), 0)
-			angles:RotateAroundAxis(angles:Right(), 180)
-			angles:RotateAroundAxis(angles:Up(), 0)
-			
-			cam.Start3D2D(position + offset2, angles, 0.1)
-				
-			if locked == true then
-				
-				// LOCKED
-			
-				draw.SimpleText("LOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
-				
-				surface.SetMaterial( locked )
-				surface.SetDrawColor( 255, 255, 255, 255 )
-				surface.DrawTexturedRect(24.6, -60,128,128)
-				
-			else	
-				
-			-- UNLOCKED
-				draw.SimpleText("UNLOCKED", "DermaLarge", 85.5, -120, Color(255, 255, 255, 255), 1, 1)
-				
-				surface.SetMaterial( unlocked )
-				surface.SetDrawColor( 255, 255, 255, 255 )
-				surface.DrawTexturedRect(24.6, -60,128,128)
-			
-			end
-			cam.End3D2D()
-			
-			end
-		end
-	end
-end
-hook.Add("PostDrawOpaqueRenderables", "cam_door_test", cam_door_test)
