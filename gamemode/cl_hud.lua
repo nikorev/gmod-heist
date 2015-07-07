@@ -21,13 +21,13 @@ local function heisthud()
 		
 		
 	-- CROSSHAIR
-		draw.RoundedBox(0, ScrW() / 2 - 1, ScrH() / 2 + 5, 2, 10, Color(255, 255, 255, 255))
-		draw.RoundedBox(0, ScrW() / 2 - 1, ScrH() / 2 - 16, 2, 10, Color(255, 255, 255, 255))
+		draw.RoundedBox(0, ScrW() / 2 - 2, ScrH() / 2 + 5, 4, 10, Color(255, 255, 255, 255))
+		draw.RoundedBox(0, ScrW() / 2 - 2, ScrH() / 2 - 16, 4, 10, Color(255, 255, 255, 255))
 		
 		--surface.DrawCircle( ScrW() / 2, ScrH() / 2, 25, Color(255, 255, 255, 255) )
 		
-		draw.RoundedBox(0, ScrW() / 2 + 5, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
-		draw.RoundedBox(0, ScrW() / 2 - 16, ScrH() / 2 - 1, 10, 2, Color(255, 255, 255, 255))
+		draw.RoundedBox(0, ScrW() / 2 + 5, ScrH() / 2 - 2, 10, 4, Color(255, 255, 255, 255))
+		draw.RoundedBox(0, ScrW() / 2 - 16, ScrH() / 2 - 2, 10, 4, Color(255, 255, 255, 255))
 		
 		
 		
@@ -112,16 +112,8 @@ end
 
 PlayerCard = vgui.RegisterTable(PlayerCard, "EditablePanel")
 
-local pow = math.pow
-local function inQuad()
- local t = .001 / 250
-  return CurTime() * pow(t, 2) + CurTime()
-end
 
 local function teamlistderma()
-
-local NextThink = CurTime() + .1
-local NextThink2 = CurTime() + .1
 
 
 -- TEAM LIST
@@ -164,7 +156,7 @@ function blackpanel:Think()
 	end
 end
 blackpanel.Paint = function()
-	draw.RoundedBox(0, 0, 0, 300, inQuad(), Color(0, 0, 0, 200))
+	draw.RoundedBox(0, 0, 0, 300, 250, Color(0, 0, 0, 200))
 end
 end
 net.Receive("openhudplayerlist", teamlistderma)

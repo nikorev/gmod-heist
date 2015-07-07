@@ -49,16 +49,3 @@ hook.Add("KeyPress", "lolol", lolol)
 
 
 
-function IsDoorLocked()
-	for k,v in pairs(ents.GetAll()) do
-		if v:GetClass() == "prop_door_rotating" then
-			if v:GetSaveTable( ).m_bLocked == true then
-				-- LOCKED IMAGE ON DOOR 3D2D
-			else
-				-- UNLOCKED IMAGE ON DOOR 3D2D
-			end
-		end
-	end
-end
-hook.Add("InitPostEntity", "IsDoorLocked", IsDoorLocked)
-
